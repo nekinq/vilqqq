@@ -100,11 +100,11 @@ export class CustomerSystem implements System {
     return [arch, rng.int(0, 2)];
   }
 
-  spawn(): CustomerState | null {
+  spawn(at?: XZ): CustomerState | null {
     const s = this.sim.state;
     const rng = this.sim.rng;
     const [arch, variant] = this.pickArchetype();
-    const sp = rng.chance(0.8) ? rng.pick(SPAWNS) : rng.pick(FAR_SPAWNS);
+    const sp = at ?? (rng.chance(0.8) ? rng.pick(SPAWNS) : rng.pick(FAR_SPAWNS));
     let assortment = this.sim.inventory.assortment();
     if (assortment.length === 0) assortment = ['bread', 'water', 'apples'];
     const st: CustomerState = {
@@ -670,8 +670,8 @@ export class CustomerSystem implements System {
   }
 
   /** Отладка: принудительно выпустить покупателя. */
-  debugSpawn(): string | null {
-    return this.spawn()?.id ?? null;
+  debugSpawn(at?: XZ): string | null {
+    return this.spawn(at)?.id ?? null;
   }
 }
 

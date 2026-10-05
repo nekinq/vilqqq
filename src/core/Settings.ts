@@ -103,7 +103,7 @@ export interface GameSettings {
 
 export const PRESETS: Record<QualityPreset, GameSettings['graphics']> = {
   low: { preset: 'low', renderScale: 0.75, shadows: 'off', drawDistance: 90, postProcessing: false, fpsLimit: 0, grassDensity: 0.35 },
-  medium: { preset: 'medium', renderScale: 1, shadows: 'low', drawDistance: 150, postProcessing: false, fpsLimit: 0, grassDensity: 0.7 },
+  medium: { preset: 'medium', renderScale: 1, shadows: 'low', drawDistance: 150, postProcessing: true, fpsLimit: 0, grassDensity: 0.7 },
   high: { preset: 'high', renderScale: 1, shadows: 'high', drawDistance: 220, postProcessing: true, fpsLimit: 0, grassDensity: 1 },
 };
 

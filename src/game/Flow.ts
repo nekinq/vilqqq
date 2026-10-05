@@ -50,7 +50,7 @@ interface Call {
  */
 export class Flow implements System {
   phoneActive = false;
-  private intro: Intro | null = null;
+  intro: Intro | null = null;
   private call: Call | null = null;
   private menuT = 0;
   private autosaveT = 0;
@@ -469,10 +469,11 @@ export class Flow implements System {
     const game = this.game;
     if (game.mode === 'menu') {
       this.menuT += frameDt;
-      const t = this.menuT * 0.035;
+      // Медленный облёт площади и магазина.
+      const t = 0.6 + this.menuT * 0.03;
       const cam = game.camera;
-      cam.position.set(Math.sin(t) * 30, 10.5 + Math.sin(t * 1.7) * 1.5, -8 + Math.cos(t) * 26);
-      cam.lookAt(0, 2.5, 2);
+      cam.position.set(Math.sin(t) * 34, 13 + Math.sin(t * 1.7) * 1.5, -10 + Math.cos(t) * 30);
+      cam.lookAt(Math.sin(t) * 4, 1.5, -6 + Math.cos(t) * 6);
       game.hud.setMarker(null);
       return;
     }

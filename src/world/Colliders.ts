@@ -234,6 +234,12 @@ export class FloorMap {
     return h;
   }
 
+  /** Есть ли под точкой платформа (пол магазина, крыльцо, ступени) с запасом pad. */
+  covered(x: number, z: number, pad = 0): boolean {
+    for (const r of this.regions) if (x >= r.x0 - pad && x <= r.x1 + pad && z >= r.z0 - pad && z <= r.z1 + pad) return true;
+    return false;
+  }
+
   /** В помещении ли точка (зал/склад) — для звука, освещения рук и т. п. */
   tagAt(x: number, z: number): string | null {
     let best: FloorRegion | null = null;

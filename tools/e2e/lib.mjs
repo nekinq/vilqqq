@@ -58,3 +58,17 @@ export async function press(page, action) {
   await page.evaluate((a) => window.__game.hold(a, false), action);
   await frames(page, 2);
 }
+
+/** Клик по элементу через DOM (надёжно при низком FPS в SwiftShader). */
+export async function click(page, selector, text) {
+  const ok = await page.evaluate(([sel, t]) => {
+    const els = [...document.querySelectorAll(sel)];
+    const el = t ? els.find((e) => e.textContent.includes(t)) : els[0];
+    if (!el) return false;
+    el.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+    el.click();
+    return true;
+  }, [selector, text ?? null]);
+  if (!ok) throw new Error(`нет элемента ${selector} ${text ?? ''}`);
+  await frames(page, 2);
+}

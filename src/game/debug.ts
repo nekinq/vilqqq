@@ -83,8 +83,8 @@ export function installDebug(game: Game): void {
     openShift() {
       return game.flow.openShift();
     },
-    spawnCustomer() {
-      return game.customers.debugSpawn();
+    spawnCustomer(x?: number, z?: number) {
+      return game.customers.debugSpawn(x !== undefined && z !== undefined ? [x, z] : undefined);
     },
     skipTutorial() {
       const t = game.sim.state.tutorial;

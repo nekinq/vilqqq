@@ -84,6 +84,7 @@ export class DayNight {
     this.setShadowExtent(shadowQuality === 'high' ? 40 : 34);
     this.sun.shadow.bias = -0.00035;
     this.sun.shadow.normalBias = 0.035;
+    this.sun.shadow.radius = shadowQuality === 'high' ? 3.2 : 2.2;
     this.sun.shadow.camera.near = 1;
     this.sun.shadow.camera.far = 220;
     scene.add(this.sun);
@@ -141,6 +142,7 @@ export class DayNight {
       this.sun.shadow.map = null as never;
     }
     this.setShadowExtent(q === 'high' ? 40 : 34);
+    this.sun.shadow.radius = q === 'high' ? 3.2 : 2.2;
   }
 
   setDrawDistance(d: number): void {

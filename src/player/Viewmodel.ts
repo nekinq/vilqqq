@@ -285,13 +285,14 @@ export class Viewmodel {
       this.armR.rotation.set(-0.2, 0.1, -0.1);
     } else if (v.kind === 'broom') {
       // Метла по диагонали: веник внизу по центру экрана, черенок уходит вправо-вверх.
+      // Веник внизу перед игроком, черенок уходит вверх-вправо к руке.
       const sw = Math.sin(this.sweepT) * this.sweepAmp;
-      broom.position.set(0.12 + bx + sw * 0.16, -1.05 + by + low + Math.abs(sw) * 0.03, -0.95);
-      broom.rotation.set(-0.55, 0.15, -0.55 + sw * 0.35);
-      this.armR.position.set(0.36 + bx + sw * 0.05, -0.38 + by + low, -0.42);
-      this.armR.rotation.set(0.55, 0.2, -0.45 + sw * 0.15);
-      this.armL.position.set(0.18 + bx + sw * 0.1, -0.58 + by + low, -0.62);
-      this.armL.rotation.set(0.7, -0.1, 0.4 + sw * 0.2);
+      broom.position.set(0.02 + bx + sw * 0.22, -0.8 + by + low + Math.abs(sw) * 0.03, -1.25);
+      broom.rotation.set(0.85, sw * 0.25, -0.45 + sw * 0.18);
+      this.armR.position.set(0.4 + bx + sw * 0.08, -0.4 + by + low, -0.52);
+      this.armR.rotation.set(0.9, 0.25, -0.35 + sw * 0.1);
+      this.armL.position.set(0.24 + bx + sw * 0.14, -0.58 + by + low, -0.78);
+      this.armL.rotation.set(1.0, -0.2, 0.2 + sw * 0.1);
     } else if (v.kind === 'cash') {
       cash.position.set(0.2 + bx, -0.24 + by + low, -0.4 - push);
       cash.rotation.set(0.2, -0.3, 0);

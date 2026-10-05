@@ -566,6 +566,7 @@ export class Village {
   // ───────────── Растительность ─────────────
 
   private clearForPlant(x: number, z: number, r: number, roadPad = 0.05): boolean {
+    if (this.floors.covered(x, z, r)) return false;
     const g = this.ground.sample(x, z);
     if (g.dirt > roadPad || g.cobble > 0.05 || g.soil > 0.05) return false;
     for (const y of this.yards) if (inRect(y, x, z, r)) return false;
@@ -665,7 +666,7 @@ export class Village {
       if (g.dirt > 0.35 || g.cobble > 0.1 || g.soil > 0.2) continue;
       const edge = g.dirt > 0.02 ? 1 : 0;
       if (!edge && !rng.chance(0.55)) continue;
-      if (!this.colliders.isFree(x, z, 0.15)) continue;
+      if (!this.colliders.isFree(x, z, 0.15) || this.floors.covered(x, z, 0.1)) continue;
       const tall = edge && rng.chance(0.15);
       tint.setRGB(0.85 + rng.range(-0.1, 0.12), 0.95 + rng.range(-0.08, 0.08), 0.85 + rng.range(-0.1, 0.1));
       this.instancer.add(tall ? 'grass_tall' : 'grass_tuft', x, 0, z, rng.range(0, 6.28), rng.range(0.8, 1.35), tint);

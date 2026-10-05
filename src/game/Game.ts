@@ -287,7 +287,7 @@ export class Game {
     this.doors.update(dt, this.doorAgents);
     this.village.dayNight.setTime(this.timeOverride ?? this.sim.state.minutes);
     this.village.update(dt, this.camera);
-    this.render.render(this.scene, this.camera, this.mode === 'play' || this.mode === 'paused' ? (this.overlay ?? undefined) : undefined);
+    this.render.render(this.scene, this.camera, this.mode === 'play' || this.mode === 'paused' ? (this.overlay ?? undefined) : undefined, this.village.dayNight.night);
     // HUD ~10 Гц.
     this.hudTimer -= dt;
     if (this.hudTimer <= 0 && this.mode !== 'loading') {

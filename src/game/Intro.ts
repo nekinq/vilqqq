@@ -24,7 +24,7 @@ const T_END = 36;
  * остановка, переход в вид от первого лица, автобус уезжает. Потом — звонок бабушки (в игре).
  */
 export class Intro {
-  private t = 0;
+  t = 0;
   private bus: THREE.Object3D;
   private driver: { obj: THREE.Object3D; rig: CharacterRig } | null = null;
   private inCurve: THREE.CatmullRomCurve3;
