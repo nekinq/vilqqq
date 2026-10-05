@@ -1,0 +1,26 @@
+:root {
+  --cream: #f4eedf;
+  --cream-2: #ebe3cf;
+  --line: #d9cfb8;
+  --green: #2f4f3f;
+  --green-2: #3d6652;
+  --green-soft: #e3ecdf;
+  --text: #26322d;
+  --muted: #6b7a72;
+  --gold: #d5ac64;
+  --pos: #2e7d4f;
+  --neg: #c0392b;
+  --wood: #b78555;
+  --shadow: 0 6px 18px rgba(20, 30, 25, 0.22);
+  --radius: 12px;
+  --font: 'Roboto Condensed', 'Arial Narrow', sans-serif;
+  --font-title: 'PT Serif', Georgia, serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: #1d2622; }
+body { font-family: var(--font); color: var(--text); user-select: none; -webkit-user-select: none; }
+#app { position: fixed; inset: 0; }
+#viewport { position: absolute; inset: 0; }
+#viewport canvas { display: block; width: 100%; height: 100%; outline: none; }
+#ui-root { position: absolute; inset: 0; pointer-events: none; }
+.fatal { position: absolute; inset: 0; display: grid; place-items: center; color: #fff; font-size: 20px; padding: 40px; text-align: center; pointer-events: auto; }
