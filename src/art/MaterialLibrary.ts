@@ -25,6 +25,8 @@ const SIGNS: Record<string, SignGen> = {
   open: () => SF.signOpenClosed(true),
   closed: () => SF.signOpenClosed(false),
   bus_route: () => SF.signPlate('7', 'Дубравка', [36, 64, 52], [244, 238, 223]),
+  box_generic: () => SF.boxLabel('Товар', '#8a6a4a'),
+  phone_call: () => SF.signPhoneCall(),
 };
 
 export class MaterialLibrary {

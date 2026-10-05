@@ -43,7 +43,8 @@ export const ROADS: Road[] = [
 /** Мощёный двор перед магазином (от площади до крыльца). */
 export const SHOP_FORECOURT = { x0: -9.5, x1: 14, z0: 0.0, z1: 6.6 } as const;
 
-export type SupplierId = 'grocery' | 'bakery' | 'produce' | 'dairy' | 'butcher';
+import type { SupplierId } from '../data/products';
+export type { SupplierId };
 
 export interface SupplierSite {
   id: SupplierId;

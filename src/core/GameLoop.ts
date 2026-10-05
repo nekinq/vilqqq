@@ -12,7 +12,10 @@ export class GameLoop {
   /** 0 — без ограничения (VSync браузера), иначе целевой FPS. */
   fpsLimit = 0;
   private sinceLastFrame = 0;
-  static readonly MAX_DT = 1 / 20;
+  /** Верхняя граница шага (для автотестов можно поднять: ?maxdt=0.25). */
+  maxDt = 1 / 20;
+  /** Номер кадра. */
+  frameNo = 0;
 
   constructor(private readonly tick: (dt: number, realDt: number) => void) {}
 
@@ -37,7 +40,8 @@ export class GameLoop {
       this.last = now;
       const target = 1 / this.fpsLimit;
       if (this.sinceLastFrame < target * 0.95) return;
-      const dt = Math.min(this.sinceLastFrame, GameLoop.MAX_DT);
+      const dt = Math.min(this.sinceLastFrame, this.maxDt);
+      this.frameNo++;
       this.account(this.sinceLastFrame);
       this.sinceLastFrame = 0;
       this.tick(dt, dt);
@@ -45,7 +49,8 @@ export class GameLoop {
     }
     this.last = now;
     this.account(realDt);
-    this.tick(Math.min(realDt, GameLoop.MAX_DT), realDt);
+    this.frameNo++;
+    this.tick(Math.min(realDt, this.maxDt), Math.min(realDt, this.maxDt));
   };
 
   private account(dt: number): void {

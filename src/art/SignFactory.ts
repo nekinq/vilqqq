@@ -340,3 +340,124 @@ export function priceTag(price: number | null, name: string): HTMLCanvasElement 
   g.fillText(price === null ? '—' : String(price), w / 2, 42);
   return c;
 }
+
+/** Экран телефона: входящий звонок от бабушки. */
+export function signPhoneCall(): HTMLCanvasElement {
+  const w = 128;
+  const h = 256;
+  const { c, g } = makeCanvas(w, h);
+  const grad = g.createLinearGradient(0, 0, 0, h);
+  grad.addColorStop(0, rgb(47, 79, 63));
+  grad.addColorStop(1, rgb(24, 38, 32));
+  g.fillStyle = grad;
+  g.fillRect(0, 0, w, h);
+  g.textAlign = 'center';
+  g.textBaseline = 'middle';
+  g.fillStyle = rgb(244, 238, 223, 0.75);
+  g.font = `400 13px ${FONT_UI}`;
+  g.fillText('входящий вызов', w / 2, 34);
+  // Аватар.
+  g.fillStyle = rgb(213, 172, 100);
+  g.beginPath();
+  g.arc(w / 2, 92, 30, 0, Math.PI * 2);
+  g.fill();
+  g.fillStyle = rgb(244, 238, 223);
+  g.beginPath();
+  g.arc(w / 2, 84, 11, 0, Math.PI * 2);
+  g.fill();
+  g.beginPath();
+  g.ellipse(w / 2, 110, 18, 11, 0, Math.PI, 0);
+  g.fill();
+  g.fillStyle = rgb(244, 238, 223);
+  g.font = `700 22px ${FONT_UI}`;
+  g.fillText('Бабушка', w / 2, 146);
+  g.font = `400 12px ${FONT_UI}`;
+  g.fillStyle = rgb(244, 238, 223, 0.7);
+  g.fillText('Нина Петровна', w / 2, 166);
+  // Кнопки.
+  g.fillStyle = rgb(192, 57, 43);
+  g.beginPath();
+  g.arc(36, 216, 15, 0, Math.PI * 2);
+  g.fill();
+  g.fillStyle = rgb(46, 160, 90);
+  g.beginPath();
+  g.arc(w - 36, 216, 15, 0, Math.PI * 2);
+  g.fill();
+  return c;
+}
+
+/** Экран кассы: позиции и итог. */
+export function counterScreen(lines: { name: string; price: number; ok: boolean }[], total: number, status: string): HTMLCanvasElement {
+  const w = 256;
+  const h = 192;
+  const { c, g } = makeCanvas(w, h);
+  g.fillStyle = rgb(28, 40, 35);
+  g.fillRect(0, 0, w, h);
+  g.fillStyle = rgb(47, 79, 63);
+  g.fillRect(0, 0, w, 30);
+  g.fillStyle = rgb(244, 238, 223);
+  g.font = `700 17px ${FONT_UI}`;
+  g.textBaseline = 'middle';
+  g.textAlign = 'left';
+  g.fillText('КАССА', 10, 15);
+  g.textAlign = 'right';
+  g.font = `400 14px ${FONT_UI}`;
+  g.fillText(status, w - 10, 15);
+  const shown = lines.slice(-6);
+  shown.forEach((l, i) => {
+    const y = 46 + i * 20;
+    g.textAlign = 'left';
+    g.fillStyle = l.ok ? rgb(159, 230, 196) : rgb(140, 160, 150);
+    g.font = `400 15px ${FONT_UI}`;
+    g.fillText((l.ok ? '✓ ' : '· ') + l.name, 10, y);
+    g.textAlign = 'right';
+    g.fillText(String(l.price), w - 10, y);
+  });
+  g.fillStyle = rgb(47, 79, 63);
+  g.fillRect(0, h - 34, w, 34);
+  g.fillStyle = rgb(244, 238, 223);
+  g.font = `700 20px ${FONT_UI}`;
+  g.textAlign = 'left';
+  g.fillText('ИТОГО', 10, h - 17);
+  g.textAlign = 'right';
+  g.fillText(String(total), w - 10, h - 17);
+  return c;
+}
+
+/** Облачко реплики над головой NPC. */
+export function speechBubble(text: string, mood: 'good' | 'bad' | 'neutral'): HTMLCanvasElement {
+  const w = 256;
+  const h = 96;
+  const { c, g } = makeCanvas(w, h);
+  g.clearRect(0, 0, w, h);
+  g.fillStyle = mood === 'bad' ? rgb(252, 236, 230) : mood === 'good' ? rgb(235, 246, 236) : rgb(250, 246, 236);
+  g.strokeStyle = mood === 'bad' ? rgb(192, 57, 43) : mood === 'good' ? rgb(46, 125, 79) : rgb(110, 122, 114);
+  g.lineWidth = 4;
+  const r = 22;
+  const x0 = 6;
+  const y0 = 6;
+  const x1 = w - 6;
+  const y1 = h - 26;
+  g.beginPath();
+  g.moveTo(x0 + r, y0);
+  g.lineTo(x1 - r, y0);
+  g.quadraticCurveTo(x1, y0, x1, y0 + r);
+  g.lineTo(x1, y1 - r);
+  g.quadraticCurveTo(x1, y1, x1 - r, y1);
+  g.lineTo(w / 2 + 14, y1);
+  g.lineTo(w / 2, h - 6);
+  g.lineTo(w / 2 - 14, y1);
+  g.lineTo(x0 + r, y1);
+  g.quadraticCurveTo(x0, y1, x0, y1 - r);
+  g.lineTo(x0, y0 + r);
+  g.quadraticCurveTo(x0, y0, x0 + r, y0);
+  g.closePath();
+  g.fill();
+  g.stroke();
+  g.fillStyle = rgb(38, 50, 45);
+  g.textAlign = 'center';
+  g.textBaseline = 'middle';
+  fitText(g, text, (px) => `700 ${px}px ${FONT_UI}`, w - 30, 30);
+  g.fillText(text, w / 2, (y0 + y1) / 2 + 1);
+  return c;
+}

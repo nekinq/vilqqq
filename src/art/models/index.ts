@@ -4,3 +4,7 @@ import './nature';
 import './props';
 import './houses';
 import './suppliers';
+import './equipment';
+import './products';
+import './characters';
+import './tools';

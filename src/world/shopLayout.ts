@@ -113,3 +113,37 @@ export const PLACEMENT_AREAS = {
   hall: SHOP.hallInner,
   warehouse: SHOP.warehouseInner,
 } as const;
+
+/**
+ * Реставрация (SHOP-01), локальные координаты магазина:
+ * 6 досок на витринах фасада, 4 паутины под потолком, 4 мешка мусора, 4 пятна на полу.
+ */
+export const RESTORATION = {
+  boards: [
+    { x: -4.0, y: FLOOR_Y + 1.21, z: -5.78, rotZ: 0.06 },
+    { x: -4.0, y: FLOOR_Y + 1.75, z: -5.79, rotZ: -0.04 },
+    { x: -4.0, y: FLOOR_Y + 2.29, z: -5.78, rotZ: 0.09 },
+    { x: 4.0, y: FLOOR_Y + 1.21, z: -5.79, rotZ: -0.07 },
+    { x: 4.0, y: FLOOR_Y + 1.75, z: -5.78, rotZ: 0.03 },
+    { x: 4.0, y: FLOOR_Y + 2.29, z: -5.79, rotZ: -0.05 },
+  ],
+  /** Паутина: угол-пивот, поворот (полотно уходит по локальной +X и вниз), масштаб. */
+  webs: [
+    { x: -6.77, y: FLOOR_Y + 3.3, z: -5.28, rotY: -Math.PI / 2, s: 1.0 },
+    { x: -6.77, y: FLOOR_Y + 2.95, z: 0.45, rotY: -Math.PI / 2, s: 0.8 },
+    { x: 6.1, y: FLOOR_Y + 3.3, z: 5.27, rotY: Math.PI, s: 0.95 },
+    { x: 6.77, y: FLOOR_Y + 3.3, z: -4.35, rotY: Math.PI / 2, s: 0.9 },
+  ],
+  waste: [
+    { x: -6.05, z: -3.7, rotY: 0.4, kind: 'bag' as const },
+    { x: -5.9, z: 3.9, rotY: -0.3, kind: 'sack' as const },
+    { x: 2.7, z: 4.75, rotY: 1.1, kind: 'bag' as const },
+    { x: 3.85, z: -0.85, rotY: 0.2, kind: 'sack' as const },
+  ],
+  stains: [
+    { x: -3.6, z: -3.0, r: 0.75, rot: 0.3 },
+    { x: -1.2, z: 0.8, r: 0.65, rot: 1.9 },
+    { x: 2.5, z: 2.5, r: 0.7, rot: 4.1 },
+    { x: 1.3, z: -1.9, r: 0.6, rot: 2.6 },
+  ],
+} as const;

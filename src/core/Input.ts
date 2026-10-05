@@ -139,6 +139,16 @@ export class Input {
     this.down.clear();
   }
 
+  /** Программное нажатие/отпускание (автотесты). */
+  inject(code: string, down: boolean): void {
+    if (down) {
+      if (!this.down.has(code)) {
+        this.down.add(code);
+        this.pendingPressed.add(code);
+      }
+    } else if (this.down.delete(code)) this.pendingReleased.add(code);
+  }
+
   /** Список действий, к которым привязан код (для проверки конфликтов). */
   actionsForCode(code: string): Action[] {
     return ACTIONS.filter((a) => this.codesFor(a).includes(code));
