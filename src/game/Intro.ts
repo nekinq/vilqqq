@@ -132,7 +132,7 @@ export class Intro {
       }
       if (t < 8) {
         // Кадр 1: у лесной дороги, автобус едет на камеру.
-        cam.position.set(2.8, groundHeight(2.8, 64) + 1.25, 64 - t * 0.6);
+        cam.position.set(1.6, groundHeight(1.6, 64) + 1.45, 64 - t * 0.6);
         cam.lookAt(bp.x, bp.y + 1.6, bp.z);
       } else if (t < 16) {
         // Кадр 2: пролёт над деревней.

@@ -558,6 +558,8 @@ export class Village {
     this.place('bus_stop', BUS_STOP.x, BUS_STOP.z, BUS_STOP.rotY);
     this.floors.add({ x0: BUS_STOP.x - 1.6, x1: BUS_STOP.x + 1.6, z0: BUS_STOP.z - 1.0, z1: BUS_STOP.z + 1.0, y: 0.14 });
     this.noTree.push({ x: BUS_STOP.x, z: BUS_STOP.z, hw: 4, hd: 4, rot: 0 });
+    // Поляна у лесной дороги для первого кадра интро (камера не упирается в ствол).
+    this.noTree.push({ x: 2.6, z: 63, hw: 4.5, hd: 8, rot: 0 });
     const [x, z] = toWorldXZ(BUS_STOP.x, BUS_STOP.z, BUS_STOP.rotY, -2.6, -0.3);
     this.flowersAt(x, z, 5, 0.8);
   }
