@@ -123,7 +123,10 @@ defineAsset({
     b.box([W - 0.12, 0.42, 0.04], [0, 0.62, 0], { color: 0xe6edf0 });
     // Зелёная полоса и кант.
     b.box([W + 0.01, 0.1, D + 0.01], [0, 0.32, 0], { color: 0x2f5a46 });
-    b.chamferBox([W + 0.03, 0.05, D + 0.03], [0, H, 0], 0.015, { mat: 'chrome', color: 0xc8cdd0 });
+    // Хромированный кант — рамкой по краю (стекло крышек остаётся прозрачным).
+    const rim = { mat: 'chrome', color: 0xc8cdd0 };
+    for (const z of [-D / 2, D / 2]) b.chamferBox([W + 0.03, 0.05, 0.07], [0, H, z], 0.012, rim);
+    for (const x of [-W / 2, W / 2]) b.chamferBox([0.07, 0.05, D + 0.03], [x, H, 0], 0.012, rim);
     // Раздвижные стеклянные крышки.
     b.box([W / 2 - 0.04, 0.012, D - 0.1], [-W / 4 + 0.01, H + 0.02, 0], { mat: 'glassFrost', noShadow: true });
     b.box([W / 2 - 0.04, 0.012, D - 0.1], [W / 4 - 0.01, H + 0.04, 0], { mat: 'glassFrost', noShadow: true });

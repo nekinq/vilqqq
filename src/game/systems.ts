@@ -17,6 +17,7 @@ import { CustomerSystem } from '../customers/CustomerSystem';
 import { SupplierSystem } from '../suppliers/SupplierSystem';
 import { Flow } from './Flow';
 import { SHOP_ORIGIN, FLOOR_Y } from '../world/shopLayout';
+import { DECOR_ASSETS } from '../world/ShopDecor';
 
 /** Ассеты, нужные игровым системам (мир грузит свои в Village). */
 export const RUNTIME_ASSETS = [
@@ -36,6 +37,7 @@ export const RUNTIME_ASSETS = [
   'trash_sack',
   'paper_litter',
   'broom',
+  ...DECOR_ASSETS,
   ...CUSTOMER_ASSET_IDS,
   ...NAMED_CHARACTER_IDS,
 ];

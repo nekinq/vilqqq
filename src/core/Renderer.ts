@@ -51,7 +51,7 @@ export class RenderSystem {
       const ps: PostSettings = {
         samples: Math.min(4, caps.maxSamples),
         ao: g.preset !== 'low',
-        aoSamples: g.preset === 'high' ? 16 : 10,
+        aoSamples: g.preset === 'high' ? 16 : 12,
         bloom: true,
         sharpen: g.renderScale < 0.95 ? 0.75 : 0.45,
       };

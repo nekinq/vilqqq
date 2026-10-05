@@ -9,6 +9,7 @@ import { SHOP, SHOP_ORIGIN, DUMPSTER, DELIVERY_PALLETS, FLOOR_Y, COUNTER } from 
 import { PLAZA, SUPPLIER_SITES, HOUSES, BUS_STOP, ROAD_LAMPS, type SupplierId, type HouseSite } from './layout';
 import { houseAssetId, HOUSE_VARIANTS } from '../art/models/houses';
 import { Rng } from '../core/rng';
+import { Ambient } from './Ambient';
 import '../art/models';
 
 export interface SupplierSpot {
@@ -67,6 +68,7 @@ export class Village {
   private noTree: Rect2[] = [];
   private rng = new Rng(20261004);
   private backdropMat: THREE.MeshBasicMaterial | null = null;
+  ambient: Ambient | null = null;
 
   constructor(
     readonly scene: THREE.Scene,
@@ -166,6 +168,7 @@ export class Village {
     this.buildVegetation();
     this.instancer.build();
     this.buildBackdrop();
+    this.ambient = new Ambient(this, this.scene);
     onProgress?.(1, 'готово');
   }
 
@@ -701,6 +704,7 @@ export class Village {
   update(dt: number, camera: THREE.Camera): void {
     this.lib.update(dt);
     this.dayNight.update(dt, camera.position, this.renderer);
+    this.ambient?.update(dt, this.dayNight.night);
     if (this.backdropMat) {
       // Атмосферная перспектива: горы чуть темнее горизонта.
       this.backdropMat.color.copy(this.dayNight.fog.color).multiplyScalar(0.8).lerp(new THREE.Color(0x5d7a8c), 0.22 * (1 - this.dayNight.night));

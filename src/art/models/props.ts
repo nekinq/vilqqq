@@ -434,3 +434,69 @@ defineAsset({
     return b.build('wheelbarrow');
   },
 });
+
+defineAsset({
+  id: 'chalkboard',
+  name: 'Грифельная доска у входа',
+  category: 'shop',
+  func: 'Декор крыльца (уровень 2): «Свежий хлеб, яблоки, вода»',
+  ref: 'Shop/SHOP-00 (доска у входа)',
+  collider: 'бокс 0.6×0.5',
+  build: () => {
+    const b = new ModelBuilder(450);
+    const wood: PartOptions = { mat: 'woodgrain', color: P.woodDark };
+    // A-образная стойка.
+    for (const s of [-1, 1]) {
+      b.beam([-0.3, 0, s * 0.28], [-0.3, 1.0, s * 0.04], 0.022, 4, wood);
+      b.beam([0.3, 0, s * 0.28], [0.3, 1.0, s * 0.04], 0.022, 4, wood);
+    }
+    b.box([0.66, 0.05, 0.05], [0, 1.0, 0], wood);
+    b.at([0, 0.56, 0.17], [-0.27, 0, 0], () => {
+      b.box([0.62, 0.8, 0.03], [0, 0, 0], wood);
+      b.plane(0.54, 0.72, [0, 0, 0.017], { mat: 'sign:chalk', noShadow: true });
+    });
+    b.at([0, 0.56, -0.17], [0.27, Math.PI, 0], () => {
+      b.box([0.62, 0.8, 0.03], [0, 0, 0], wood);
+      b.plane(0.54, 0.72, [0, 0, 0.017], { mat: 'sign:chalk', noShadow: true });
+    });
+    return b.build('chalkboard');
+  },
+});
+
+defineAsset({
+  id: 'window_box',
+  name: 'Ящик с цветами под окно',
+  category: 'shop',
+  func: 'Декор витрин (уровень 2)',
+  ref: 'Shop/SHOP-00, BLD-01 (ящики с цветами)',
+  collider: 'нет',
+  build: () => {
+    const b = new ModelBuilder(451);
+    b.box([2.2, 0.22, 0.26], [0, 0.11, 0], { mat: 'woodgrain', color: 0x5d7d4e });
+    b.box([2.24, 0.04, 0.3], [0, 0.22, 0], { mat: 'woodgrain', color: 0x4a6a3e });
+    for (const x of [-0.9, 0.9]) b.box([0.04, 0.2, 0.06], [x, -0.08, -0.1], { mat: 'metal', color: P.iron, noShadow: true });
+    const cols = [0xd8453a, 0xf2c94c, 0xf7f5f0, 0xb06ac0, 0xf08a5a];
+    for (let i = 0; i < 14; i++) {
+      const x = -1.0 + (i / 13) * 2.0;
+      b.ico(0.1, 0, [x, 0.28, (i % 2) * 0.05 - 0.02], { mat: 'foliageStatic', color: i % 3 ? P.leaf : P.leafDark, faceJitter: 0.12 });
+      b.ico(0.045, 0, [x + 0.03, 0.37, 0.03], { color: cols[i % cols.length]!, noShadow: true });
+    }
+    return b.build('window_box');
+  },
+});
+
+defineAsset({
+  id: 'doormat',
+  name: 'Коврик у входа',
+  category: 'shop',
+  func: 'Декор зала (уровень 5)',
+  ref: 'бриф',
+  collider: 'нет',
+  build: () => {
+    const b = new ModelBuilder(452);
+    b.box([1.6, 0.012, 1.0], [0, 0.006, 0], { mat: 'fabric', color: 0x9a3f36, noShadow: true });
+    b.box([1.4, 0.014, 0.8], [0, 0.007, 0], { mat: 'fabric', color: 0xd8b060, noShadow: true });
+    b.box([1.2, 0.016, 0.6], [0, 0.008, 0], { mat: 'fabric', color: 0x2f5a46, noShadow: true });
+    return b.build('doormat');
+  },
+});

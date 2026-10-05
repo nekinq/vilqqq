@@ -108,6 +108,9 @@ export class UI {
       const top = this.top;
       if (top) {
         if (top.esc !== false) this.close(top);
+      } else if (this.game.mode === 'play' && this.game.stock?.placement) {
+        this.game.stock.cancelPlacement();
+        this.game.audio.play('click');
       } else if (this.game.mode === 'play') this.game.pause();
       return;
     }

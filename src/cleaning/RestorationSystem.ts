@@ -6,6 +6,7 @@ import { BALANCE } from '../data/balance';
 import { damp } from '../core/math';
 import type { LooseItem } from '../game/state';
 import { Rng } from '../core/rng';
+import { ShopDecor } from '../world/ShopDecor';
 
 const OX = SHOP_ORIGIN.x;
 const OZ = SHOP_ORIGIN.z;
@@ -47,6 +48,7 @@ export class RestorationSystem implements System {
   private doorFlip = 0;
   private lights: { light: THREE.PointLight; base: number; kind: 'hall' | 'porch' | 'wh' }[] = [];
   private unsub: (() => void)[] = [];
+  private decor: ShopDecor;
 
   constructor(private readonly game: Game) {
     this.root.name = 'restoration';
@@ -62,6 +64,7 @@ export class RestorationSystem implements System {
     this.buildStains();
     this.buildWeeds();
     this.buildLights();
+    this.decor = new ShopDecor(game.assets, game.lib, game.village.colliders, game.scene);
     const ev = game.sim.events;
     this.unsub.push(
       ev.on('restoration', () => this.sync()),
@@ -69,6 +72,7 @@ export class RestorationSystem implements System {
         game.audio.play('success');
         this.sync();
       }),
+      ev.on('levelUp', () => this.sync()),
     );
     this.sync();
   }
@@ -410,6 +414,7 @@ export class RestorationSystem implements System {
     if (this.signOld) this.signOld.visible = !complete;
     if (this.signNew) this.signNew.visible = complete;
     this.weeds.visible = !complete;
+    this.decor.sync(complete, this.game.sim.state.level);
   }
 
   private setBoard(v: BoardView, m: THREE.Matrix4): void {
