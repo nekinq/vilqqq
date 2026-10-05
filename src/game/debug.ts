@@ -2,6 +2,7 @@ import type { Game } from './Game';
 import type { Action } from '../core/Settings';
 import type { ProductId } from '../data/products';
 import type { FurnitureType } from '../data/equipment';
+import { RESTORATION, SHOP_ORIGIN, FLOOR_Y, DUMPSTER, deliverySlots } from '../world/shopLayout';
 
 /**
  * Отладочный API для автотестов и скриншотов: window.__game.
@@ -90,6 +91,36 @@ export function installDebug(game: Game): void {
       const t = game.sim.state.tutorial;
       t.done = true;
       t.rewarded = true;
+    },
+    /** Точки для прицеливания автотестов (мировые координаты). */
+    targets() {
+      const OX = SHOP_ORIGIN.x;
+      const OZ = SHOP_ORIGIN.z;
+      const r = game.sim.state.restoration;
+      const vendors: Record<string, { stand: { x: number; z: number }; look: { x: number; y: number; z: number } }> = {};
+      for (const [id, sp] of game.village.supplierSpots) vendors[id] = { stand: { x: sp.customer.x, z: sp.customer.z }, look: { x: sp.vendor.x, y: 1.3, z: sp.vendor.z } };
+      return {
+        vendors,
+        boards: RESTORATION.boards.map((b, i) => (r.boards[i] === 'loose' && r.boardPos[i] ? { x: r.boardPos[i]!.x, y: r.boardPos[i]!.y + 0.03, z: r.boardPos[i]!.z, state: 'loose' } : { x: OX + b.x, y: b.y, z: OZ + b.z, state: r.boards[i] })),
+        webs: RESTORATION.webs.map((w) => {
+          const c = Math.cos(w.rotY);
+          const sn = Math.sin(w.rotY);
+          return { x: OX + w.x + 0.45 * w.s * c, y: w.y - 0.45 * w.s, z: OZ + w.z - 0.45 * w.s * sn };
+        }),
+        waste: RESTORATION.waste.map((w, i) => {
+          const p = r.wastePos[i];
+          return p ? { x: p.x, y: p.y + 0.3, z: p.z } : { x: OX + w.x, y: FLOOR_Y + 0.3, z: OZ + w.z };
+        }),
+        stains: RESTORATION.stains.map((st) => ({ x: OX + st.x, y: FLOOR_Y, z: OZ + st.z })),
+        dumpster: { x: DUMPSTER.x, y: 0.9, z: DUMPSTER.z },
+        delivery: deliverySlots().map((p) => ({ x: OX + p.x, y: p.y + 0.15, z: OZ + p.z })),
+      };
+    },
+    /** Мировая точка места товара в секции и точка доступа. */
+    section(key: string) {
+      const slot = game.stock.slotWorld(key, 0);
+      const acc = game.stock.accessPoint(key);
+      return slot && acc ? { slot: { x: slot.x, y: slot.y, z: slot.z }, access: { x: acc.x, z: acc.z } } : null;
     },
     errors: [] as string[],
   };

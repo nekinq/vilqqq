@@ -7,3 +7,7 @@ playwright-report/
 .DS_Store
 .vite/
 tmp/
+
+# Генерируется npm run models
+public/assets/models/
+.qa/

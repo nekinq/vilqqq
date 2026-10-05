@@ -33,6 +33,9 @@ interface Agent {
   yield: number;
   collider: number | null;
   queueSpot: number;
+  /** Защита от застревания: лучшее расстояние до точки и время без прогресса. */
+  best: number;
+  stall: number;
 }
 
 const OX = SHOP_ORIGIN.x;
@@ -160,6 +163,8 @@ export class CustomerSystem implements System {
       yield: 0,
       collider: null,
       queueSpot: -1,
+      best: Infinity,
+      stall: 0,
     };
     this.agents.set(st.id, a);
     return a;
@@ -183,6 +188,8 @@ export class CustomerSystem implements System {
     a.pi = 0;
     a.onArrive = onArrive;
     a.face = null;
+    a.best = Infinity;
+    a.stall = 0;
   }
 
   /** Путь внутри магазина (NavGrid) с запасным прямым отрезком. */
@@ -518,6 +525,17 @@ export class CustomerSystem implements System {
         this.spawnCooldown = 2.5;
       }
     }
+    // Поздно вечером: оставшиеся уходят, а совсем поздно — исчезают (день должен закончиться).
+    if (dt > 0 && s.phase === 'closing') {
+      const late = s.minutes - BALANCE.dayEnd;
+      for (const a of [...this.agents.values()]) {
+        if (late > 60 && a.st.phase !== 'leaving' && a.st.phase !== 'gone' && !(s.checkout && s.checkout.customerId === a.st.id && late < 90)) this.giveUp(a);
+        if (late > 120 && this.agents.has(a.st.id)) {
+          this.game.counter.cancel(a.st.id);
+          this.removeAgent(a);
+        }
+      }
+    }
     this.game.npcPositions.length = 0;
     const pl = this.game.player.position;
     for (const a of [...this.agents.values()]) {
@@ -620,8 +638,19 @@ export class CustomerSystem implements System {
       const dx = tx - st.x;
       const dz = tz - st.z;
       const dist = Math.hypot(dx, dz);
+      // Нет прогресса 6 с — перескочить к точке (не даём дню «зависнуть»).
+      if (dist < a.best - 0.05) {
+        a.best = dist;
+        a.stall = 0;
+      } else a.stall += dt;
+      if (a.stall > 6) {
+        st.x = tx;
+        st.z = tz;
+        a.stall = 0;
+      }
       if (dist < 0.08) {
         a.pi++;
+        a.best = Infinity;
         if (a.pi >= a.path.length) {
           const cb = a.onArrive;
           a.onArrive = null;

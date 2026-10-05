@@ -35,9 +35,13 @@ export class SupplierSystem implements System {
       this.root.add(obj);
       const v: Vendor = { id, obj, rig: new CharacterRig(obj), baseYaw: spot.vendorRotY, talking: false };
       this.vendors.push(v);
-      // Хитбокс: продавец и прилавок со стороны покупателя.
-      const hit = hitBox(2.6, 2.0, 2.2);
-      hit.position.set((spot.vendor.x + spot.customer.x) / 2, 1.0, (spot.vendor.z + spot.customer.z) / 2);
+      // Хитбокс: продавец и прилавок (игрок стоит снаружи, перед прилавком).
+      const dx = spot.customer.x - spot.vendor.x;
+      const dz = spot.customer.z - spot.vendor.z;
+      const dl = Math.hypot(dx, dz) || 1;
+      const hit = hitBox(2.2, 2.0, Math.min(1.5, dl * 0.75));
+      const k = Math.min(1.5, dl * 0.75) / 2 - 0.2;
+      hit.position.set(spot.vendor.x + (dx / dl) * k, 1.0, spot.vendor.z + (dz / dl) * k);
       hit.rotation.y = spot.vendorRotY;
       this.root.add(hit);
       game.interaction.register({

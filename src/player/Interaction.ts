@@ -51,7 +51,8 @@ export function hitBox(w: number, h: number, d: number): THREE.Mesh {
   return m;
 }
 const HIT_GEO = new THREE.BoxGeometry(1, 1, 1);
-const HIT_MAT = new THREE.MeshBasicMaterial({ color: 0xff00ff, wireframe: true });
+// Двусторонний: луч из точки внутри хитбокса тоже засчитывается.
+const HIT_MAT = new THREE.MeshBasicMaterial({ color: 0xff00ff, wireframe: true, side: THREE.DoubleSide });
 
 /**
  * Взаимодействие от первого лица: raycast из центра экрана, ближайшая цель в пределах досягаемости,

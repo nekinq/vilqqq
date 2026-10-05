@@ -22,6 +22,9 @@ export class AssetManager {
   readonly failures: string[] = [];
   loadedFromGlb = 0;
   builtProcedurally = 0;
+  /** Список экспортированных GLB (public/assets/models/manifest.json). null — не загружен. */
+  private manifest: Set<string> | null = null;
+  private manifestReady: Promise<void> | null = null;
 
   constructor(
     private readonly materials: MaterialLibrary,
@@ -32,8 +35,26 @@ export class AssetManager {
     this.loader.setMeshoptDecoder(MeshoptDecoder);
   }
 
+  /** Прочитать манифест GLB; если его нет — все модели строятся процедурно. */
+  private ensureManifest(): Promise<void> {
+    if (this.source !== 'glb') return Promise.resolve();
+    if (!this.manifestReady) {
+      this.manifestReady = fetch(this.baseUrl + 'assets/models/manifest.json')
+        .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+        .then((j: { assets: Record<string, unknown> }) => {
+          this.manifest = new Set(Object.keys(j.assets));
+        })
+        .catch(() => {
+          console.info('[AssetManager] манифест GLB не найден — модели строятся из кода');
+          this.manifest = new Set();
+        });
+    }
+    return this.manifestReady;
+  }
+
   /** Загрузить набор ассетов с прогрессом (0..1). */
   async preload(ids: readonly string[], onProgress?: (p: number, id: string) => void): Promise<void> {
+    await this.ensureManifest();
     let done = 0;
     const unique = [...new Set(ids)];
     // Ограничиваем параллелизм, чтобы прогресс шёл плавно и не забивался канал.
@@ -68,7 +89,8 @@ export class AssetManager {
 
   private async loadInner(id: string): Promise<THREE.Object3D> {
     const def = getAssetDef(id);
-    if (this.source === 'glb' && def && !def.runtimeOnly) {
+    if (this.source === 'glb') await this.ensureManifest();
+    if (this.source === 'glb' && def && !def.runtimeOnly && this.manifest?.has(id)) {
       try {
         const gltf = await this.loader.loadAsync(this.baseUrl + glbPath(id));
         const root = gltf.scene.children.length === 1 ? gltf.scene.children[0]! : gltf.scene;
